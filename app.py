@@ -72,17 +72,23 @@ def report():
     if not url:
         return jsonify({'error': 'URL required'}), 400
     
-    # Basic validation to ensure they are targeting this app
-    # In a real CTF, you might want to be stricter or looser depending on the setup
-    # For this, we'll just check if it starts with http
-    if not url.startswith('http'):
-        return jsonify({'error': 'Invalid URL protocol'}), 400
-
-    print(f"[*] State Alchemist is investigating: {url}")
-    
     try:
+        # Extract filename from the provided URL
+        target_filename = url.split('/')[-1]
+        
+        # Security check: Ensure it is an SVG
+        if not target_filename.endswith('.svg'):
+            return jsonify({'error': 'Invalid target file'}), 400
+
+        # FORCE LOCALHOST: This fixes the "Empty Cookie" bug
+        # The bot will visit 127.0.0.1, ensuring cookies are set in the correct context
+        local_url = f"http://127.0.0.1:5000/view/{target_filename}"
+        
+        print(f"[*] State Alchemist is investigating: {local_url}")
+        
         # Launch the bot
-        subprocess.Popen(['node', 'bot.js', url])
+        subprocess.Popen(['node', 'bot.js', local_url])
+        
         return jsonify({'message': 'The State Alchemist has been notified and will inspect your circle shortly.'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
