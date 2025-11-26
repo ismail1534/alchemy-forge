@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle Analysis - The Alchemy Forge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="alchemy-bg"></div>
+    <div class="vignette"></div>
+
+    <div class="container">
+        <header>
+            <h1>Circle Analysis</h1>
+            <p class="subtitle">Equivalent Exchange Verification</p>
+        </header>
+
+        <main>
+            <div class="circle-display">
+                <object data="{{ url_for('uploaded_file', filename=filename) }}" type="image/svg+xml"
+                    class="alchemy-circle"></object>
+            </div>
+
+            <div class="actions">
+                <a href="/" class="btn">Back to Forge</a>
+                <button onclick="reportCircle()" class="btn report-btn">Submit for Review</button>
+            </div>
+
+            <div id="status-message"></div>
+        </main>
+    </div>
+
+    <script>
+        function reportCircle() {
+            const btn = document.querySelector('.report-btn');
+            const status = document.getElementById('status-message');
+
+            btn.disabled = true;
+            status.innerText = "Summoning the State Alchemist...";
+
+            // Send the current URL to the admin bot
+            const currentUrl = window.location.href;
+
+            fetch('/report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'url=' + encodeURIComponent(currentUrl)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    status.innerText = data.message || data.error;
+                    status.className = data.error ? 'error' : 'success';
+                })
+                .catch(err => {
+                    status.innerText = "Transmutation Rebound! (Error contacting server)";
+                    status.className = 'error';
+                    btn.disabled = false;
+                });
+        }
+    </script>
+</body>
+
+</html>

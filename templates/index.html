@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Alchemy Forge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="alchemy-bg"></div>
+    <div class="vignette"></div>
+
+    <div class="container">
+        <header>
+            <h1>The Alchemy Forge</h1>
+            <p class="subtitle">State Alchemist Certification Exam</p>
+        </header>
+
+        <main>
+            <div class="forge-panel">
+                <p style="margin-bottom: 15px;">To become a State Alchemist, you must demonstrate your understanding of
+                    Transmutation Circles.</p>
+                <p>Upload your SVG circle for analysis. If it is worthy, the High Command will review it.</p>
+
+                <form action="/upload" method="post" enctype="multipart/form-data" class="transmutation-form">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="file" id="file" accept=".svg" required>
+                        <label for="file">Select Transmutation Circle (.svg)</label>
+                    </div>
+                    <button type="submit" class="transmute-btn">TRANSMUTE</button>
+                </form>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+            </div>
+        </main>
+
+        <footer>
+            <p>"Humankind cannot gain anything without first giving something in return."</p>
+        </footer>
+    </div>
+</body>
+
+</html>
