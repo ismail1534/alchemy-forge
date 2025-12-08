@@ -10,6 +10,7 @@ if (!targetUrl) {
 (async () => {
     try {
         const browser = await puppeteer.launch({
+            executablePath: '/usr/bin/chromium',
             headless: 'new',
             args: [
                 '--no-sandbox',
@@ -20,11 +21,6 @@ if (!targetUrl) {
 
         const page = await browser.newPage();
 
-        // Set the flag cookie
-        // The domain must match the app's domain. In a local docker setup, 'localhost' or '127.0.0.1' usually works.
-        // For CTFd deployment, this might need adjustment if the bot runs on a different host, 
-        // but typically they run in the same container or network.
-        // We'll set it for the current domain of the target URL.
         const urlObj = new URL(targetUrl);
 
         await page.setCookie({
